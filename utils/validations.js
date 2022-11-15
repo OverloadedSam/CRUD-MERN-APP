@@ -10,6 +10,22 @@ const userSchema = {
   password: Joi.string().required().label('Password'),
 };
 
-exports.validateUserData = (data) => {
+const validateUserData = (data) => {
   return ({ value, error } = Joi.object(userSchema).validate(data));
+};
+
+const validateUpdatedUserData = (data) => {
+  const keys = Object.keys(data);
+  const userUpdateSchema = {};
+
+  keys.forEach((key) => {
+    userUpdateSchema[key] = userSchema[key];
+  });
+
+  return ({ value, error } = Joi.object(userUpdateSchema).validate(data));
+};
+
+module.exports = {
+  validateUserData,
+  validateUpdatedUserData,
 };
