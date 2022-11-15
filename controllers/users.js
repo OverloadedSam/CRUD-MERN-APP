@@ -1,7 +1,10 @@
 const User = require('../models/user');
 const asyncHandler = require('../middlewares/asyncHandler');
 const ErrorResponse = require('../utils/errorResponse');
-const { validateUserData } = require('../utils/validations');
+const {
+  validateUserData,
+  validateUpdatedUserData,
+} = require('../utils/validations');
 
 // @route    POST /api/register
 // @desc     Register user to the DB
@@ -73,7 +76,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route    GET /api/customer/customer/:id
+// @route    GET /api/customer/:id
 // @desc     Get customer/user details by id.
 // @access   Protected
 const getUserById = asyncHandler(async (req, res, next) => {
@@ -94,4 +97,41 @@ const getUserById = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { registerUser, loginUser, getUserById };
+// @route   PUT /api/update/:id
+// @access  Protected
+// @desc    Update customer/user info in DB.
+const updateUserById = asyncHandler(async (req, res, next) => {
+  const userData = { ...req.body };
+  const userId = req.user._id;
+  delete userData.password;
+
+  if (!userId.equals(req.params.id) && !req.user.admin)
+    return next(new ErrorResponse(403, 'Invalid credentials'));
+
+  // Validate user data to be updated.
+  const { error } = validateUpdatedUserData(userData);
+
+  if (error) {
+    const [validationError] = error.details;
+
+    return res.status(422).json({
+      success: false,
+      status: 422,
+      message: validationError.message,
+      key: validationError.context.key,
+    });
+  }
+
+  const user = await User.updateOne({ _id: userId }, userData);
+
+  if (user.modifiedCount === 0) throw new Error();
+
+  return res.status(200).json({
+    success: true,
+    status: 200,
+    message: 'Your information has been updated successfully',
+    data: userData,
+  });
+});
+
+module.exports = { registerUser, loginUser, getUserById, updateUserById };
