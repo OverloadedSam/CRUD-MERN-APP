@@ -41,4 +41,36 @@ const registerUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { registerUser };
+// @route    POST /api/login
+// @desc     Login for registered users.
+// @access   Public
+const loginUser = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return next(
+      new ErrorResponse(400, 'Please provide both email and password!')
+    );
+
+  const user = await User.findOne({ email });
+
+  if (!user)
+    return next(new ErrorResponse(400, 'This email is not registered!'));
+
+  if (!(await user.matchPassword(password)))
+    return next(new ErrorResponse(400, 'Invalid password!'));
+
+  const token = user.generateAuthToken();
+
+  res.status(200).header('x-auth-token', token).json({
+    success: true,
+    status: 200,
+    _id: user._id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    token,
+  });
+});
+
+module.exports = { registerUser, loginUser };
