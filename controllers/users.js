@@ -134,4 +134,26 @@ const updateUserById = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { registerUser, loginUser, getUserById, updateUserById };
+const deleteUserById = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+
+  if (!userId.equals(req.params.id) && !req.user.admin)
+    return next(new ErrorResponse(403, 'You have no authority to do this!'));
+
+  const deleted = await User.findByIdAndDelete(userId);
+  if (!deleted) throw new Error();
+
+  return res.status(200).json({
+    success: true,
+    status: 200,
+    message: 'Your account has been deleted successfully',
+  });
+});
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+};

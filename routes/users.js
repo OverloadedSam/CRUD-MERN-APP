@@ -7,11 +7,13 @@ const {
   loginUser,
   getUserById,
   updateUserById,
+  deleteUserById
 } = require('../controllers/users');
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/customer/:id', verifyId('id'), protect, getUserById);
 router.put('/updateCustomer/:id', verifyId('id'), protect, updateUserById);
+router.delete('/deleteAccount/:id', verifyId('id'), protect, deleteUserById);
 
 module.exports = router;
