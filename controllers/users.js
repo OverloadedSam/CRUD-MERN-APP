@@ -73,4 +73,25 @@ const loginUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { registerUser, loginUser };
+// @route    GET /api/customer/customer/:id
+// @desc     Get customer/user details by id.
+// @access   Protected
+const getUserById = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) throw new Error();
+
+  if (!req.user._id.equals(user._id) && !user.admin)
+    return next(new ErrorResponse(401, 'Invalid credentials'));
+
+  user.password = undefined;
+  delete user.password;
+
+  return res.status(200).json({
+    success: true,
+    status: 200,
+    data: user,
+  });
+});
+
+module.exports = { registerUser, loginUser, getUserById };
