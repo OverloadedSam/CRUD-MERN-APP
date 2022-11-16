@@ -1,3 +1,9 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .hero {
   background: url('../../public/assets/images/background.jpg');
   background-position: center;
@@ -17,4 +23,8 @@
 .register,
 .login {
   max-width: 40rem;
+}
+
+.footer {
+  margin-top: auto;
 }
