@@ -4,6 +4,7 @@ import NavMenu from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './screens/Home';
 import Register from './screens/Register';
+import Login from './screens/Login';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <NavMenu />
       <ToastContainer />
       <Routes>
+        <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/' element={<Home />} />
       </Routes>
