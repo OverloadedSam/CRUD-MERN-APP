@@ -5,7 +5,7 @@ import Form from '../common/Form';
 import Container from 'react-bootstrap/Container';
 import FormBootstrap from 'react-bootstrap/Form';
 
-class Register extends Form {
+class Login extends Form {
   constructor() {
     super();
 
@@ -65,4 +65,4 @@ class Register extends Form {
   }
 }
 
-export default Register;
+export default Login;
