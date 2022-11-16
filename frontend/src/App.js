@@ -1,7 +1,16 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter as Router, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import NavMenu from './components/Navbar';
 
 function App() {
-  return <h1>CRUD App</h1>;
+  return (
+    <Router>
+      <NavMenu />
+      <ToastContainer />
+      <Routes>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
