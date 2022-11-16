@@ -1,14 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Joi from 'joi-browser';
+import { connect } from 'react-redux';
+import userActions from '../redux/actions/userActions';
 import Form from '../common/Form';
 import Container from 'react-bootstrap/Container';
 import FormBootstrap from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { toast } from 'react-toastify';
 
 class Register extends Form {
-  constructor(props) {
+  constructor() {
     super();
 
     this.state = {
@@ -19,15 +22,10 @@ class Register extends Form {
         email: '',
         dateOfBirth: '',
         password: '',
-        confirm_password: '',
         address: '',
       },
       errors: {},
       responseError: null,
-      show: {
-        password: false,
-        confirm_password: false,
-      },
     };
   }
 
@@ -50,10 +48,41 @@ class Register extends Form {
       .label('Date of Birth'),
     email: Joi.string().email().required().label('E-mail'),
     password: Joi.string().min(1).max(256).required().label('Password'),
-    address: Joi.string().required().label('address'),
+    address: Joi.string().min(5).max(1024).trim().required().label('Address'),
   };
 
+  performSubmit = (e) => {
+    const { firstName, lastName } = this.state.data;
+    const payload = {
+      ...this.state.data,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+    };
+
+    if (!payload.lastName) delete payload.lastName;
+
+    return this.props.registerUser(payload);
+  };
+
+  componentDidUpdate() {
+    const { success, error } = this.props.userRegister;
+
+    if (success) {
+      toast.success('Successfully Registered!');
+      window.location = '/';
+      return;
+    }
+    if (error) {
+      this.setState({ responseError: error });
+      toast.error(error);
+      this.props.resetRegisterUser();
+    }
+  }
+
   render() {
+    const { loading } = this.props.userRegister;
+    const { responseError } = this.state;
+
     const firstNameInput = {
       id: 'firstName',
       type: 'text',
@@ -106,9 +135,10 @@ class Register extends Form {
     };
 
     const buttonInput = {
-      label: 'Register',
+      label: !!loading ? 'Please wait...' : 'Register',
       variant: 'outline-success',
       type: 'submit',
+      disabled: !!loading,
       block: true,
     };
 
@@ -116,6 +146,11 @@ class Register extends Form {
       <Container>
         <FormBootstrap className='register my-5 mx-auto shadow p-5 rounded'>
           <h2 className='text-center mb-5'>Register</h2>
+          {responseError && (
+            <p className='text-center fw-bold text-danger mb-2'>
+              {responseError}
+            </p>
+          )}
           <Row>
             <Col xs={12} md={6}>
               {this.renderInput(firstNameInput)}
@@ -139,4 +174,13 @@ class Register extends Form {
   }
 }
 
-export default Register;
+const mapStateToProps = (state) => ({
+  userRegister: state.userRegister,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  registerUser: (payload) => dispatch(userActions.registerUser(payload)),
+  resetRegisterUser: () => dispatch(userActions.resetRegisterUser()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
