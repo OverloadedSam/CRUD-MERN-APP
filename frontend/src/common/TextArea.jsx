@@ -5,8 +5,8 @@ const TextArea = (props) => {
   const { id, label, cols, rows, error, ...rest } = props;
   return (
     <>
-      <Form.Group className='mb-3' controlId={id}>
-        {label && <Form.Label>Example textarea</Form.Label>}
+      <Form.Group className='mb-3 fw-bold' controlId={id}>
+        {label && <Form.Label>{label}</Form.Label>}
         <Form.Control
           name={id}
           as='textarea'

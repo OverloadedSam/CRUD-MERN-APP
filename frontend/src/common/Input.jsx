@@ -5,7 +5,7 @@ const Input = (props) => {
   const { id, label, error, groupElement, ...rest } = props;
   return (
     <>
-      <Form.Group className='mb-3' controlId={id}>
+      <Form.Group className='mb-3 fw-bold' controlId={id}>
         {label && <Form.Label>{label}</Form.Label>}
         <Form.Control name={id} isInvalid={!!error} {...rest} />
         {error && <Form.Text className='text-danger'>{error}</Form.Text>}
