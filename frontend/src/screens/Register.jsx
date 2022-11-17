@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Joi from 'joi-browser';
 import { connect } from 'react-redux';
 import userActions from '../redux/actions/userActions';
@@ -82,6 +82,11 @@ class Register extends Form {
   render() {
     const { loading } = this.props.userRegister;
     const { responseError } = this.state;
+    if (this.props.isLoggedIn) {
+      toast('Your are already logged in!');
+
+      return <Navigate to='/' />;
+    }
 
     const firstNameInput = {
       id: 'firstName',
@@ -176,6 +181,7 @@ class Register extends Form {
 
 const mapStateToProps = (state) => ({
   userRegister: state.userRegister,
+  isLoggedIn: state.userLogin.isLoggedIn,
 });
 
 const mapDispatchToProps = (dispatch) => ({

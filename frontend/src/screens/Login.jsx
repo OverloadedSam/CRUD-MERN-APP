@@ -1,9 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Joi from 'joi-browser';
+import { connect } from 'react-redux';
+import userActions from '../redux/actions/userActions';
 import Form from '../common/Form';
 import Container from 'react-bootstrap/Container';
 import FormBootstrap from 'react-bootstrap/Form';
+import { toast } from 'react-toastify';
 
 class Login extends Form {
   constructor() {
@@ -24,7 +27,32 @@ class Login extends Form {
     password: Joi.string().min(1).max(256).required().label('Password'),
   };
 
+  performSubmit = () => {
+    const payload = this.state.data;
+    this.props.loginUser(payload);
+  };
+
+  componentDidUpdate() {
+    const { success, error } = this.props.userLogin;
+
+    if (success) {
+      window.location = '/';
+    }
+    if (error) {
+      this.setState({ responseError: error });
+      this.props.resetLoginUser();
+    }
+  }
+
   render() {
+    const { loading, isLoggedIn } = this.props.userLogin;
+    const { responseError } = this.state;
+    if (isLoggedIn) {
+      toast('Your are already logged in!');
+
+      return <Navigate to='/' />;
+    }
+
     const emailInput = {
       id: 'email',
       type: 'email',
@@ -43,9 +71,10 @@ class Login extends Form {
     };
 
     const buttonInput = {
-      label: 'Login',
+      label: loading ? 'Please wait...' : 'Login',
       variant: 'danger',
       type: 'submit',
+      disabled: !!loading,
       block: true,
     };
 
@@ -53,6 +82,11 @@ class Login extends Form {
       <Container>
         <FormBootstrap className='login my-5 mx-auto shadow p-5 rounded'>
           <h2 className='text-center mb-5'>Login</h2>
+          {responseError && (
+            <p className='text-center fw-bold text-danger mb-2'>
+              {responseError}
+            </p>
+          )}
           {this.renderInput(emailInput)}
           {this.renderInput(passwordInput)}
           {this.renderButton(buttonInput)}
@@ -65,4 +99,11 @@ class Login extends Form {
   }
 }
 
-export default Login;
+const mapStateToProps = (state) => ({ userLogin: state.userLogin });
+
+const mapDispatchToProps = (dispatch) => ({
+  loginUser: (payload) => dispatch(userActions.loginUser(payload)),
+  resetLoginUser: () => dispatch(userActions.resetLoginUser()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
