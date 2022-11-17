@@ -28,3 +28,7 @@
 .footer {
   margin-top: auto;
 }
+
+.user-icon img {
+  width: 10rem;
+}
