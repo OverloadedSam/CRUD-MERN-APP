@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function NavMenu() {
+  const user = useSelector((state) => state.userLogin);
+
   return (
     <>
       <Navbar key='sm' bg='dark' variant='dark' expand='sm'>
@@ -38,15 +42,32 @@ function NavMenu() {
                   Contact
                 </Link>
               </Nav>
-              <Form className='d-flex'>
-                <Form.Control
-                  type='search'
-                  placeholder='Search'
-                  className='me-2'
-                  aria-label='Search'
-                />
-                <Button variant='outline-primary'>Search</Button>
-              </Form>
+              {user.isLoggedIn ? (
+                <Dropdown align={{ sm: 'end' }}>
+                  <Dropdown.Toggle variant='outline-info' id='dropdown-basic'>
+                    Account
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to='/profile'>
+                      Profile
+                    </Dropdown.Item>
+                    <Dropdown.Item as={Link} to='/logout'>
+                      Logout
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : (
+                <Form className='d-flex'>
+                  <Form.Control
+                    type='search'
+                    placeholder='Search'
+                    className='me-2'
+                    aria-label='Search'
+                  />
+                  <Button variant='outline-primary'>Search</Button>
+                </Form>
+              )}
             </Offcanvas.Body>
           </Navbar.Offcanvas>
         </Container>
