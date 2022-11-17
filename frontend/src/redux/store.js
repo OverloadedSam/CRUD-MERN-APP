@@ -6,6 +6,7 @@ const rootReducer = {
   userRegister: userReducer.userRegisterReducer,
   userLogin: userReducer.userLoginReducer,
   user: userReducer.userDetailsReducer,
+  userUpdate: userReducer.userUpdateReducer,
 };
 
 const user = auth.getCurrentUser();

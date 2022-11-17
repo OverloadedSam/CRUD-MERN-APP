@@ -97,12 +97,41 @@ const getUserDetails = () => async (dispatch) => {
   }
 };
 
+const updateUserDetails = (payload) => async (dispatch) => {
+  dispatch({ type: actions.USER_UPDATE_REQUESTED });
+  const user = auth.getCurrentUser();
+
+  try {
+    const {
+      data: { data },
+    } = await http.put(`/updateCustomer/${user && user.id}`, payload);
+    dispatch({
+      type: actions.USER_UPDATE_SUCCEEDED,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: actions.USER_UPDATE_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+const resetUpdateUserDetails = () => async (dispatch) => {
+  dispatch({ type: actions.USER_UPDATE_RESET });
+};
+
 const userActions = {
   registerUser,
   resetRegisterUser,
   loginUser,
   resetLoginUser,
   getUserDetails,
+  updateUserDetails,
+  resetUpdateUserDetails,
 };
 
 export default userActions;

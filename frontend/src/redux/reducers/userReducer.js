@@ -103,10 +103,46 @@ export const userDetailsReducer = (state = userDetailsInitState, action) => {
   }
 };
 
+const userUpdateInitState = {
+  loading: false,
+  error: null,
+  success: false,
+  userUpdatedData: null,
+};
+
+export const userUpdateReducer = (state = userUpdateInitState, action) => {
+  switch (action.type) {
+    case actions.USER_UPDATE_REQUESTED:
+      return {
+        ...userUpdateInitState,
+        loading: true,
+      };
+    case actions.USER_UPDATE_SUCCEEDED:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        userUpdatedData: action.payload,
+      };
+    case actions.USER_UPDATE_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case actions.USER_UPDATE_RESET:
+      return { ...userUpdateInitState };
+
+    default:
+      return state;
+  }
+};
+
 const userReducers = {
   userRegisterReducer,
   userLoginReducer,
   userDetailsReducer,
+  userUpdateReducer,
 };
 
 export default userReducers;

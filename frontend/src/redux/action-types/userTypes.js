@@ -12,6 +12,11 @@ const USER_DETAILS_REQUESTED = 'userDetailsRequested';
 const USER_DETAILS_SUCCEEDED = 'userDetailsSucceeded';
 const USER_DETAILS_FAILED = 'userDetailsFailed';
 
+const USER_UPDATE_REQUESTED = 'userUpdateRequested';
+const USER_UPDATE_SUCCEEDED = 'userUpdateSucceeded';
+const USER_UPDATE_FAILED = 'userUpdateFailed';
+const USER_UPDATE_RESET = 'userUpdateReset';
+
 const userTypes = {
   USER_REGISTER_REQUESTED,
   USER_REGISTER_SUCCEEDED,
@@ -24,6 +29,10 @@ const userTypes = {
   USER_DETAILS_REQUESTED,
   USER_DETAILS_SUCCEEDED,
   USER_DETAILS_FAILED,
+  USER_UPDATE_REQUESTED,
+  USER_UPDATE_SUCCEEDED,
+  USER_UPDATE_FAILED,
+  USER_UPDATE_RESET,
 };
 
 export default userTypes;
