@@ -8,6 +8,10 @@ const USER_LOGIN_SUCCEEDED = 'userLoginSucceeded';
 const USER_LOGIN_FAILED = 'userLoginFailed';
 const USER_LOGIN_RESET = 'userLoginReset';
 
+const USER_DETAILS_REQUESTED = 'userDetailsRequested';
+const USER_DETAILS_SUCCEEDED = 'userDetailsSucceeded';
+const USER_DETAILS_FAILED = 'userDetailsFailed';
+
 const userTypes = {
   USER_REGISTER_REQUESTED,
   USER_REGISTER_SUCCEEDED,
@@ -17,6 +21,9 @@ const userTypes = {
   USER_LOGIN_SUCCEEDED,
   USER_LOGIN_FAILED,
   USER_LOGIN_RESET,
+  USER_DETAILS_REQUESTED,
+  USER_DETAILS_SUCCEEDED,
+  USER_DETAILS_FAILED,
 };
 
 export default userTypes;

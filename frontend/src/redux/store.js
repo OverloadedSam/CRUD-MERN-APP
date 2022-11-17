@@ -5,6 +5,7 @@ import auth from '../services/authService';
 const rootReducer = {
   userRegister: userReducer.userRegisterReducer,
   userLogin: userReducer.userLoginReducer,
+  user: userReducer.userDetailsReducer,
 };
 
 const user = auth.getCurrentUser();

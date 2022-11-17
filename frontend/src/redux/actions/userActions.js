@@ -68,11 +68,41 @@ const resetLoginUser = () => async (dispatch) => {
   dispatch({ type: actions.USER_LOGIN_RESET });
 };
 
+const getUserDetails = () => async (dispatch) => {
+  dispatch({ type: actions.USER_DETAILS_REQUESTED });
+  const user = auth.getCurrentUser();
+
+  try {
+    const {
+      data: { data },
+    } = await http.get(`/customer/${user && user.id}`);
+    delete data._id;
+    delete data.createdAt;
+    delete data.updatedAt;
+    delete data.__v;
+    data.dateOfBirth = data.dateOfBirth.substr(0, 10);
+
+    dispatch({
+      type: actions.USER_DETAILS_SUCCEEDED,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: actions.USER_DETAILS_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 const userActions = {
   registerUser,
   resetRegisterUser,
   loginUser,
   resetLoginUser,
+  getUserDetails,
 };
 
 export default userActions;

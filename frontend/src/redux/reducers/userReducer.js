@@ -70,9 +70,43 @@ export const userLoginReducer = (state = loginInitState, action) => {
   }
 };
 
+const userDetailsInitState = {
+  loading: false,
+  error: null,
+  success: false,
+  user: null,
+};
+
+export const userDetailsReducer = (state = userDetailsInitState, action) => {
+  switch (action.type) {
+    case actions.USER_DETAILS_REQUESTED:
+      return {
+        ...userDetailsInitState,
+        loading: true,
+      };
+    case actions.USER_DETAILS_SUCCEEDED:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        user: action.payload,
+      };
+    case actions.USER_DETAILS_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
 const userReducers = {
   userRegisterReducer,
   userLoginReducer,
+  userDetailsReducer,
 };
 
 export default userReducers;
