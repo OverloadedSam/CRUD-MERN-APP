@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Home from './screens/Home';
 import Register from './screens/Register';
 import Login from './screens/Login';
+import Logout from './common/Logout';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <NavMenu />
       <ToastContainer />
       <Routes>
+        <Route path='/logout' element={<Logout />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/' element={<Home />} />
