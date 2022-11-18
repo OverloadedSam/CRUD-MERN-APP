@@ -7,6 +7,7 @@ const rootReducer = {
   userLogin: userReducer.userLoginReducer,
   user: userReducer.userDetailsReducer,
   userUpdate: userReducer.userUpdateReducer,
+  userDelete: userReducer.deleteUserAccountReducer,
 };
 
 const user = auth.getCurrentUser();

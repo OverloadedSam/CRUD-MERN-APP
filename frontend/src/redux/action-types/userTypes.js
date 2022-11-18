@@ -17,6 +17,11 @@ const USER_UPDATE_SUCCEEDED = 'userUpdateSucceeded';
 const USER_UPDATE_FAILED = 'userUpdateFailed';
 const USER_UPDATE_RESET = 'userUpdateReset';
 
+const DELETE_ACCOUNT_REQUESTED = 'deleteAccountRequested';
+const DELETE_ACCOUNT_SUCCEEDED = 'deleteAccountSucceeded';
+const DELETE_ACCOUNT_FAILED = 'deleteAccountFailed';
+const DELETE_ACCOUNT_RESET = 'deleteAccountReset';
+
 const userTypes = {
   USER_REGISTER_REQUESTED,
   USER_REGISTER_SUCCEEDED,
@@ -33,6 +38,10 @@ const userTypes = {
   USER_UPDATE_SUCCEEDED,
   USER_UPDATE_FAILED,
   USER_UPDATE_RESET,
+  DELETE_ACCOUNT_REQUESTED,
+  DELETE_ACCOUNT_SUCCEEDED,
+  DELETE_ACCOUNT_FAILED,
+  DELETE_ACCOUNT_RESET
 };
 
 export default userTypes;

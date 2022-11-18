@@ -138,11 +138,50 @@ export const userUpdateReducer = (state = userUpdateInitState, action) => {
   }
 };
 
+const deleteUserInitState = {
+  loading: false,
+  error: null,
+  success: false,
+  data: null,
+};
+
+export const deleteUserAccountReducer = (
+  state = deleteUserInitState,
+  action
+) => {
+  switch (action.type) {
+    case actions.DELETE_ACCOUNT_REQUESTED:
+      return {
+        ...deleteUserInitState,
+        loading: true,
+      };
+    case actions.DELETE_ACCOUNT_SUCCEEDED:
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case actions.USER_UPDATE_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case actions.DELETE_ACCOUNT_RESET:
+      return { ...deleteUserInitState };
+
+    default:
+      return state;
+  }
+};
+
 const userReducers = {
   userRegisterReducer,
   userLoginReducer,
   userDetailsReducer,
   userUpdateReducer,
+  deleteUserAccountReducer,
 };
 
 export default userReducers;

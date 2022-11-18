@@ -124,6 +124,32 @@ const resetUpdateUserDetails = () => async (dispatch) => {
   dispatch({ type: actions.USER_UPDATE_RESET });
 };
 
+const deleteUserAccount = () => async (dispatch) => {
+  dispatch({ type: actions.DELETE_ACCOUNT_REQUESTED });
+  const user = auth.getCurrentUser();
+
+  try {
+    const { data } = await http.delete(`/deleteAccount/${user && user.id}`);
+
+    dispatch({
+      type: actions.DELETE_ACCOUNT_SUCCEEDED,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: actions.USER_DETAILS_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+const resetDeleteUserAccount = () => async (dispatch) => {
+  dispatch({ type: actions.DELETE_ACCOUNT_RESET });
+};
+
 const userActions = {
   registerUser,
   resetRegisterUser,
@@ -132,6 +158,8 @@ const userActions = {
   getUserDetails,
   updateUserDetails,
   resetUpdateUserDetails,
+  deleteUserAccount,
+  resetDeleteUserAccount,
 };
 
 export default userActions;
