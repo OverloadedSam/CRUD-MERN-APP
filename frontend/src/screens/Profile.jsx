@@ -2,7 +2,10 @@ import React from 'react';
 import Joi from 'joi-browser';
 import { connect } from 'react-redux';
 import action from '../redux/actions/userActions';
+import auth from '../services/authService';
 import Form from '../common/Form';
+import Button from '../common/Button';
+import Modal from '../common/Modal';
 import Container from 'react-bootstrap/Container';
 import FormBootstrap from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -25,6 +28,7 @@ class MyProfile extends Form {
       },
       errors: {},
       editProfileMode: false,
+      show: false,
     };
   }
 
@@ -60,6 +64,14 @@ class MyProfile extends Form {
     });
   };
 
+  showModal = () => this.setState({ show: true });
+
+  closeModal = () => this.setState({ show: false });
+
+  deleteUser = () => {
+    this.props.deleteUserAccount();
+  };
+
   performSubmit = () => {
     const { firstName, lastName } = this.state.data;
     const payload = {
@@ -80,6 +92,8 @@ class MyProfile extends Form {
   componentDidUpdate(prevProps) {
     const { user } = this.props.user;
     const { error: userUpdateError, userUpdatedData } = this.props.userUpdate;
+    const { loading: deleteSuccess, error: deleteError } =
+      this.props.userDelete;
 
     if (user && !prevProps.user.user) {
       const userData = { ...user };
@@ -103,11 +117,22 @@ class MyProfile extends Form {
       this.props.resetUpdateUserDetails();
       toast.error(userUpdateError);
     }
+
+    if (deleteSuccess) {
+      auth.logoutUser();
+      window.location = '/';
+    }
+
+    if (deleteError) {
+      this.props.resetDeleteUserAccount();
+      toast.error(deleteError);
+    }
   }
 
   render() {
     const { loading, error, success } = this.props.user;
     const { loading: updating } = this.props.userUpdate;
+    const { loading: deleting } = this.props.userDelete;
     const { editProfileMode } = this.state;
 
     const firstNameInput = {
@@ -172,6 +197,31 @@ class MyProfile extends Form {
       variant: 'success',
       block: true,
     };
+    const deleteAccountButton = {
+      label: deleting ? 'Deleting...' : 'Delete Account',
+      type: 'button',
+      className: 'mt-3',
+      variant: 'outline-danger',
+      block: true,
+      onClickHandler: this.showModal,
+    };
+    const modalProps = {
+      heading: 'Warning! Danger Zone',
+      message:
+        'This action can not be undone! Do you want to delete this account?',
+      content: (
+        <>
+          <Button variant='danger' onClick={this.deleteUser}>
+            Yes
+          </Button>{' '}
+          <Button variant='success' onClick={this.closeModal}>
+            No
+          </Button>
+        </>
+      ),
+      show: this.state.show,
+      closeModal: this.closeModal,
+    };
 
     return (
       <Container>
@@ -203,8 +253,10 @@ class MyProfile extends Form {
                 ? this.renderButton(editProfileButton)
                 : this.renderButton(discardButton)}{' '}
               {editProfileMode && this.renderButton(updateProfileButton)}{' '}
+              {!editProfileMode && this.renderButton(deleteAccountButton)}
             </>
           ) : null}
+          <Modal {...modalProps} />
         </FormBootstrap>
       </Container>
     );
@@ -214,12 +266,14 @@ class MyProfile extends Form {
 const mapStateToProps = (state) => ({
   user: state.user,
   userUpdate: state.userUpdate,
+  userDelete: state.userDelete,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getUserDetails: () => dispatch(action.getUserDetails()),
   updateUserDetails: (payload) => dispatch(action.updateUserDetails(payload)),
   resetUpdateUserDetails: () => dispatch(action.resetUpdateUserDetails()),
+  deleteUserAccount: () => dispatch(action.deleteUserAccount()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyProfile);
