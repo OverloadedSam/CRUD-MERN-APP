@@ -1,6 +1,7 @@
 const express = require('express');
 const server = express();
 const connectDB = require('./config/db');
+const cors = require('./middlewares/cors.js');
 const errorHandler = require('./middlewares/errorHandler');
 const morgan = require('morgan');
 require('dotenv').config();
@@ -11,6 +12,7 @@ if (server.get('env') !== 'production') {
 
 connectDB();
 
+server.use(cors());
 server.use(express.json({ extended: true }));
 
 // Routers
