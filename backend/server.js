@@ -12,7 +12,7 @@ if (server.get('env') !== 'production') {
 
 connectDB();
 
-server.use(cors());
+server.use(cors);
 server.use(express.json({ extended: true }));
 
 // Routers
